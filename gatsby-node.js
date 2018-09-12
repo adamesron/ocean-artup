@@ -4,7 +4,7 @@ const pageTemplate = path.resolve('./src/templates/page.js')
 const postTemplate = path.resolve('./src/templates/post.js')
 const blogCategoryTemplate = path.resolve('./src/templates/blogCategory.js')
 
-const contentfulQuery = (contentType) => `
+const contentfulQuery = contentType => `
   {
     content: allContentful${contentType} {
       edges {
@@ -18,8 +18,16 @@ const contentfulQuery = (contentType) => `
 
 const pageSets = [
   { query: contentfulQuery(`Page`), component: pageTemplate, pathPrefix: `` },
-  { query: contentfulQuery(`BlogPost`), component: postTemplate, pathPrefix: `blog/` },
-  { query: contentfulQuery(`BlogCategory`), component: blogCategoryTemplate, pathPrefix: `blog/` },
+  {
+    query: contentfulQuery(`BlogPost`),
+    component: postTemplate,
+    pathPrefix: `blog/`,
+  },
+  {
+    query: contentfulQuery(`BlogCategory`),
+    component: blogCategoryTemplate,
+    pathPrefix: `blog/`,
+  },
 ]
 
 exports.createPages = ({ graphql, actions }) => {
@@ -31,13 +39,15 @@ exports.createPages = ({ graphql, actions }) => {
       throw new Error(response.errors)
     }
     response.data.content.edges.forEach(({ node }) => {
-      createPage({
-        path: pathPrefix + node.slug,
-        component,
-        context: {
-          slug: node.slug,
-        },
-      })
+      if (![`/`].includes(node.slug)) {
+        createPage({
+          path: pathPrefix + node.slug,
+          component,
+          context: {
+            slug: node.slug,
+          },
+        })
+      }
     })
   })
 }
