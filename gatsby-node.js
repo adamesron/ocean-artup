@@ -17,7 +17,7 @@ const contentfulQuery = contentType => `
 `
 
 const pageSets = [
-  { query: contentfulQuery(`Page`), component: pageTemplate, pathPrefix: `` },
+  { query: contentfulQuery(`Page`), component: pageTemplate },
   {
     query: contentfulQuery(`BlogPost`),
     component: postTemplate,
@@ -30,22 +30,19 @@ const pageSets = [
   },
 ]
 
-exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions
-  pageSets.forEach(async ({ query, component, pathPrefix }) => {
+exports.createPages = ({ graphql, actions: { createPage } }) => {
+  pageSets.forEach(async ({ query, component, pathPrefix = `` }) => {
     const response = await graphql(query)
     if (response.errors) {
       console.error(response.errors)
       throw new Error(response.errors)
     }
-    response.data.content.edges.forEach(({ node }) => {
-      if (![`contact`].includes(node.slug)) {
+    response.data.content.edges.forEach(({ node: { slug } }) => {
+      if (![`contact`].includes(slug)) {
         createPage({
-          path: pathPrefix + node.slug,
+          path: pathPrefix + slug,
           component,
-          context: {
-            slug: node.slug,
-          },
+          context: { slug },
         })
       }
     })
