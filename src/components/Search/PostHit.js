@@ -25,10 +25,10 @@ const PostHit = clickHandler => ({ hit }) => (
       &emsp;
       <Tags size="1em" />
       &nbsp;
-      {hit.categories.map(({ title, slug }, index) => (
-        <Fragment key={slug}>
-          {!!index && ', '}
-          <Link to={`blog/` + slug}>{title}</Link>
+      {hit.tags.map(({ title }, index) => (
+        <Fragment key={title}>
+          {!!index && `, `}
+          {title}
         </Fragment>
       ))}
     </div>
