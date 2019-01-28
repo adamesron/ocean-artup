@@ -1,8 +1,7 @@
-const path = require('path')
+const path = require(`path`)
 
-const pageTemplate = path.resolve('./src/templates/page.js')
-const postTemplate = path.resolve('./src/templates/post.js')
-const blogCategoryTemplate = path.resolve('./src/templates/blogCategory.js')
+const pageTemplate = path.resolve(`./src/templates/page.js`)
+const postTemplate = path.resolve(`./src/templates/post.js`)
 
 const contentfulQuery = contentType => `
   {
@@ -19,14 +18,9 @@ const contentfulQuery = contentType => `
 const pageSets = [
   { query: contentfulQuery(`Page`), component: pageTemplate },
   {
-    query: contentfulQuery(`BlogPost`),
+    query: contentfulQuery(`Post`),
     component: postTemplate,
-    pathPrefix: `blog/`,
-  },
-  {
-    query: contentfulQuery(`BlogCategory`),
-    component: blogCategoryTemplate,
-    pathPrefix: `blog/`,
+    pathPrefix: `/blog/`,
   },
 ]
 
