@@ -24,8 +24,8 @@ const pageSets = [
   },
 ]
 
-exports.createPages = ({ graphql, actions: { createPage } }) => {
-  pageSets.forEach(async ({ query, component, pathPrefix = `` }) => {
+exports.createPages = async ({ graphql, actions: { createPage } }) => {
+  await pageSets.forEach(async ({ query, component, pathPrefix = `` }) => {
     const response = await graphql(query)
     if (response.errors) {
       console.error(response.errors)
